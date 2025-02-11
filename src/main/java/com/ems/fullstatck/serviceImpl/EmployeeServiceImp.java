@@ -21,7 +21,6 @@ public class EmployeeServiceImp implements EmployeeService {
 
     @Override
     public EmployeeDTO saveEmployee(EmployeeDTO employeeDTO) {
-
         Optional<Employee> isExistEmail = employeeRespository.findByEmail(employeeDTO.getEmail());
         if (isExistEmail.isPresent()) {
             throw new EmployeeAlreadyExistException("Email already exist " + employeeDTO.getEmail());
@@ -64,20 +63,43 @@ public class EmployeeServiceImp implements EmployeeService {
         employeeRespository.delete(isExistId);
     }
 
+//    @Override
+//    public Employee convertToEntity(EmployeeDTO employeeDTO) {
+//
+//        Employee employee = new Employee();
+//        employee.setId(employeeDTO.getId());
+//        employee.setName(employeeDTO.getName());
+//        employee.setEmail(employeeDTO.getEmail());
+//        employee.setCity(employeeDTO.getCity());
+//        return employee;
+//    }
+
     @Override
     public Employee convertToEntity(EmployeeDTO employeeDTO) {
-
-        Employee employee = new Employee();
-        employee.setId(employeeDTO.getId());
-        employee.setName(employeeDTO.getName());
-        employee.setEmail(employeeDTO.getEmail());
-        employee.setCity(employeeDTO.getCity());
-        return employee;
+        return Optional.ofNullable(employeeDTO)
+                .map(dto -> new Employee(
+                        dto.getId(),
+                        dto.getName(),
+                        dto.getEmail(),
+                        dto.getCity()))
+                .orElseThrow(() -> new IllegalArgumentException("EmployeeDTO cannot be null"));
     }
 
-    @Override
+//    @Override
+//    public EmployeeDTO convertToDTO(Employee employee) {
+//        return new EmployeeDTO(employee.getId(), employee.getName(), employee.getEmail(), employee.getCity());
+//    }
+
     public EmployeeDTO convertToDTO(Employee employee) {
-        return new EmployeeDTO(employee.getId(), employee.getName(), employee.getEmail(), employee.getCity());
+        return Optional.ofNullable(employee)
+                .map(emp -> new EmployeeDTO.Builder()
+                        .id(emp.getId())
+                        .name(emp.getName())
+                        .email(emp.getEmail())
+                        .city(emp.getCity())
+                        .build())
+                .orElseThrow(() -> new IllegalArgumentException("Employee cannot be null"));
     }
+
 
 }

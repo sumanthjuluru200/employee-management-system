@@ -3,7 +3,6 @@ package com.ems.fullstatck;
 import com.ems.fullstatck.entity.Employee;
 import com.ems.fullstatck.entity.EmployeeDTO;
 import com.ems.fullstatck.repository.EmployeeRespository;
-import com.ems.fullstatck.service.EmployeeService;
 import com.ems.fullstatck.serviceImpl.EmployeeServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,57 +40,64 @@ public class EmployeeServiceTest {
     private EmployeeDTO employeeDTO;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         employee = new Employee(1L, "Sai", "sai@gmail.com", "Raidurgam");
-        employeeDTO = new EmployeeDTO(1L, "Sai", "sai@gmail.com", "Raidurgam");
+//        employeeDTO = new EmployeeDTO(1L, "Sai", "sai@gmail.com", "Raidurgam");
+        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+                .id(1L)
+                .name("John Doe")
+                .email("john.doe@example.com")
+                .city("New York")
+                .build();
     }
 
     @Test
-    public void testGetAllEmployees(){
+    public void testGetAllEmployees() {
         when(employeeRespository.findAll()).thenReturn(Arrays.asList(employee));
-        List<EmployeeDTO> employeeDTOS=employeeServiceImp.findAllEmployees();
+        List<EmployeeDTO> employeeDTOS = employeeServiceImp.findAllEmployees();
         assertNotNull(employeeDTOS);
-        assertEquals(1,employeeDTOS.size());
+        assertEquals(1, employeeDTOS.size());
     }
 
     @DisplayName("Get Employee By Id Test Method")
     @Test
-    public void testGetEmployeeById(){
+    public void testGetEmployeeById() {
 
         when(employeeRespository.findById(anyLong())).thenReturn(Optional.of(employee));
-        EmployeeDTO foundEmployee=employeeServiceImp.findById(1L);
+        EmployeeDTO foundEmployee = employeeServiceImp.findById(1L);
         assertNotNull(foundEmployee);
-        assertEquals(employee.getName(),foundEmployee.getName());
+        assertEquals(employee.getName(), foundEmployee.getName());
     }
 
 
     @Test
     @DisplayName("Save Employee Test")
-    public  void testSaveEmployee(){
+    public void testSaveEmployee() {
+//        when(employeeRespository.findByEmail(any(String.class))).thenReturn(Optional.empty());
         when(employeeRespository.save(any(Employee.class))).thenReturn(employee);
-        EmployeeDTO savedEmployee=employeeServiceImp.saveEmployee(employeeDTO);
+        EmployeeDTO savedEmployee = employeeServiceImp.saveEmployee(employeeDTO);
         assertNotNull(savedEmployee);
-        assertEquals(employeeDTO.getName(),savedEmployee.getName());
+        assertEquals(employeeDTO.getName(), savedEmployee.getName());
     }
 
     @Test
     @DisplayName("Update Employee Test")
-    public void testUpdateEmployee(){
+    public void testUpdateEmployee() {
         when(employeeRespository.findById(anyLong())).thenReturn(Optional.of(employee));
         when(employeeRespository.save(any(Employee.class))).thenReturn(employee);
-        EmployeeDTO updatedEmployee=employeeServiceImp.saveEmployee(employeeDTO);
+        EmployeeDTO updatedEmployee = employeeServiceImp.saveEmployee(employeeDTO);
         assertNotNull(updatedEmployee);
-        assertEquals(employeeDTO.getName(),updatedEmployee.getName());
+        assertEquals(employeeDTO.getName(), updatedEmployee.getName());
 
     }
 
     @Test
     @DisplayName("Delete Employee Test")
-    public void testDeleteEmployee(){
+    public void testDeleteEmployee() {
         when(employeeRespository.findById(anyLong())).thenReturn(Optional.of(employee));
         employeeServiceImp.deleteEmployee(1L);
 
         verify(employeeRespository, times(1)).findById(1L);
-        verify(employeeRespository,times(1)).delete(employee);
+        verify(employeeRespository, times(1)).delete(employee);
     }
 }
