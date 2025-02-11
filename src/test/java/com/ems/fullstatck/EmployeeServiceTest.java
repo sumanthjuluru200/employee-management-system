@@ -2,6 +2,7 @@ package com.ems.fullstatck;
 
 import com.ems.fullstatck.entity.Employee;
 import com.ems.fullstatck.entity.EmployeeDTO;
+import com.ems.fullstatck.exception.EmployeeAlreadyExistException;
 import com.ems.fullstatck.repository.EmployeeRespository;
 import com.ems.fullstatck.serviceImpl.EmployeeServiceImp;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,10 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,11 +43,11 @@ public class EmployeeServiceTest {
     public void setup() {
         employee = new Employee(1L, "Sai", "sai@gmail.com", "Raidurgam");
 //        employeeDTO = new EmployeeDTO(1L, "Sai", "sai@gmail.com", "Raidurgam");
-        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+         employeeDTO = EmployeeDTO.builder()
                 .id(1L)
-                .name("John Doe")
-                .email("john.doe@example.com")
-                .city("New York")
+                .name("Sai")
+                .email("sai@example.com")
+                .city("Raidurgam")
                 .build();
     }
 
@@ -73,11 +73,20 @@ public class EmployeeServiceTest {
     @Test
     @DisplayName("Save Employee Test")
     public void testSaveEmployee() {
-//        when(employeeRespository.findByEmail(any(String.class))).thenReturn(Optional.empty());
+        when(employeeRespository.findByEmail(any(String.class))).thenReturn(Optional.empty());
         when(employeeRespository.save(any(Employee.class))).thenReturn(employee);
         EmployeeDTO savedEmployee = employeeServiceImp.saveEmployee(employeeDTO);
         assertNotNull(savedEmployee);
         assertEquals(employeeDTO.getName(), savedEmployee.getName());
+    }
+
+    @Test
+    public void saveTest(){
+        when(employeeRespository.findByEmail(anyString())).thenReturn(Optional.of(employee));
+        Exception exception=assertThrows(EmployeeAlreadyExistException.class,()->employeeServiceImp.saveEmployee(employeeDTO));
+        String expectedMessage="Email already exist "+employeeDTO.getEmail();
+        String actualMessage=exception.getMessage();
+        assertEquals(expectedMessage,actualMessage);
     }
 
     @Test
