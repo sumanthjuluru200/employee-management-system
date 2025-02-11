@@ -1,9 +1,6 @@
 package com.ems.fullstatck.controller;
 
-
-import com.ems.fullstatck.entity.Employee;
 import com.ems.fullstatck.entity.EmployeeDTO;
-import com.ems.fullstatck.repository.EmployeeRespository;
 import com.ems.fullstatck.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +29,8 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.findById(id));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeDTO employeeDTO) {
+    @PutMapping("/update")
+    public ResponseEntity<String> updateEmployee(@RequestBody EmployeeDTO employeeDTO) {
         employeeService.updateEmployee(employeeDTO);
         return ResponseEntity.ok("EMPLOYEE UPDATE SUCCESSFULLY " + employeeDTO);
     }
