@@ -1,16 +1,16 @@
 package com.ems.fullstatck.entity;
 
-public class BookDTO {
+public class EmployeeDTO {
 
     private Long id;
     private String name;
     private String email;
     private String city;
 
-    public BookDTO() {
+    public EmployeeDTO() {
     }
 
-    public BookDTO(Long id, String name, String email, String city) {
+    public EmployeeDTO(Long id, String name, String email, String city) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -51,7 +51,7 @@ public class BookDTO {
 
     @Override
     public String toString() {
-        return "BookDTO{" +
+        return "EmployeeDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
