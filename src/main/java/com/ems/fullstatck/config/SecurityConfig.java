@@ -39,8 +39,8 @@ public class SecurityConfig {
 
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
-//        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
-        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+
         provider.setUserDetailsService(userDetailsService);
         return provider;
     }
