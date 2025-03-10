@@ -4,10 +4,9 @@ import com.ems.fullstatck.entity.Users;
 import com.ems.fullstatck.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -23,5 +22,10 @@ public class UsersController {
         users.setPassword(encoder.encode(users.getPassword()));
         return userService.register(users);
 
+    }
+
+    @GetMapping("/getAll")
+    public List<Users> getAllUsers(){
+       return userService.getAllUsers();
     }
 }

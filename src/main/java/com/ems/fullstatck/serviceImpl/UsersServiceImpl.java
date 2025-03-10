@@ -6,6 +6,8 @@ import com.ems.fullstatck.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsersServiceImpl implements UserService {
 
@@ -15,5 +17,10 @@ public class UsersServiceImpl implements UserService {
     @Override
     public Users register(Users users) {
         return usersRepository.save(users);
+    }
+
+    @Override
+    public List<Users> getAllUsers() {
+        return usersRepository.findAll();
     }
 }
