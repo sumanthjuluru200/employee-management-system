@@ -47,7 +47,7 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO) {
+    public EmployeeDTO updateEmployee(Long id,EmployeeDTO employeeDTO) {
         Employee employee = employeeRespository.findById(employeeDTO.getId()).orElseThrow(() -> new EmployeeNotFoundException("EMPLOYEE NOT FOUND WITH ID - " + employeeDTO.getId()));
         employee.setName(employeeDTO.getName());
         employee.setEmail(employeeDTO.getEmail());

@@ -3,10 +3,13 @@ package com.ems.fullstatck.controller;
 import com.ems.fullstatck.entity.EmployeeDTO;
 import com.ems.fullstatck.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employee")
@@ -15,10 +18,12 @@ public class EmployeeController {
     @Autowired
     public EmployeeService employeeService;
 
+
     @PostMapping("/save")
-    public ResponseEntity<EmployeeDTO> saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-//        EmployeeDTO savedEmployee=employeeService.saveEmployee(employeeDTO);
-        return ResponseEntity.ok(employeeService.saveEmployee(employeeDTO));
+    public ResponseEntity<EmployeeDTO> saveEmp(@RequestBody EmployeeDTO employeeDTO) {
+        employeeService.saveEmployee(employeeDTO);
+        return new ResponseEntity<>(employeeDTO, HttpStatus.CREATED);
+
     }
 
     @GetMapping("/getAll")
@@ -31,16 +36,24 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.findById(id));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<String> updateEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        employeeService.updateEmployee(employeeDTO);
-        return ResponseEntity.ok("EMPLOYEE UPDATE SUCCESSFULLY " + employeeDTO);
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
+        return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+
     }
 
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<Map<String, Object>> deleteById(@PathVariable("id") Long id) {
         employeeService.deleteEmployee(id);
-        return ResponseEntity.ok("EMPLOYEE DELTED SUCCESSFULLY WITH ID - " + id);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "EMPLOYEE DELETED SUCCESSFULLY");
+        response.put("id", id);
+        response.put("status", HttpStatus.OK.value());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
